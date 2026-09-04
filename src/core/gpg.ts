@@ -31,11 +31,14 @@ export async function setupKeys(os: OS) {
 
   core.debug("Refreshing keys");
   await refreshKeys();
+
+  // Ensure the key used to sign current Swift 6.x releases is present
+  await exec("gpg", ["--list-keys", "E813C892820A6FA13755B268F167DF1ACF9CE069"]);
 }
 
 export async function verify(signaturePath: string, packagePath: string) {
   core.debug("Verifying signature");
-  await exec("gpg", ["--verify", signaturePath, packagePath]);
+  await exec("gpg", ["--verbose", "--verify", signaturePath, packagePath]);
 }
 
 export async function refreshKeys() {
