@@ -1,7 +1,7 @@
 import { machine } from "os";
 import { addPath, debug, info } from "@actions/core";
 import { downloadTool, find, extractTar, cacheDir } from "@actions/tool-cache";
-import { verify } from "../../core/gpg";
+import { verify, refreshKeys } from "../../core/gpg";
 import { cmd } from "../../core";
 
 interface Options {
@@ -18,6 +18,7 @@ export async function setupLinux(options: Options) {
   let path = find("swiftly", "1.1.0");
 
   if (!path) {
+    refreshKeys();
     path = await download(options);
   } else {
     debug("Found cached Swiftly");
